@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Аудит Google Ads — atomic-shop.ae</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #faf6ec;
+    --bg-soft: #f3eedf;
+    --surface: #ffffff;
+    --ink: #1c1c1a;
+    --ink-2: #3a3a36;
+    --muted: #7a756a;
+    --line: #e3ddca;
+    --accent: #b8410c;
+    --accent-soft: #fbe9dd;
+    --green: #1b6b3a;
+    --green-soft: #e2f0e6;
+    --gold: #a86a00;
+    --gold-soft: #f6ead0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 17px; line-height: 1.65;
+    color: var(--ink);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection { background: var(--ink); color: var(--bg); }
+
+  .wrap { max-width: 740px; margin: 0 auto; padding: 0 28px; }
+  .wide { max-width: 1080px; margin: 0 auto; padding: 0 28px; }
+
+  /* Topbar */
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+    background: var(--bg);
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(6px);
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; gap: 16px; font-size: 13px; color: var(--muted); }
+  .topbar-inner b { color: var(--ink); font-weight: 600; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border: 1px solid var(--line); border-radius: 100px; font-size: 12px; }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 80px 0 60px; }
+  .eyebrow {
+    font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+  h1.title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(38px, 5.5vw, 60px);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  h1.title em { font-style: italic; color: var(--accent); font-weight: 500; }
+  .lede { font-size: 20px; line-height: 1.55; color: var(--ink-2); max-width: 640px; }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  .hero-meta {
+    display: flex; gap: 32px; margin-top: 48px; padding-top: 28px;
+    border-top: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .hero-meta div { font-size: 13px; color: var(--muted); }
+  .hero-meta div b { display: block; color: var(--ink); font-weight: 600; font-size: 15px; margin-top: 2px; font-family: 'JetBrains Mono', monospace; }
+
+  /* Summary block */
+  .summary-block {
+    background: var(--ink); color: var(--bg);
+    padding: 56px 0; margin: 0;
+  }
+  .summary-block .eyebrow { color: #f3a780; }
+  .summary-block .eyebrow::after { background: rgba(255,255,255,0.12); }
+  .summary-text {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.5;
+    font-weight: 500;
+    color: #f4ecd8;
+    letter-spacing: -0.005em;
+  }
+  .summary-text em { font-style: italic; color: #f5a880; }
+  .summary-text b { color: #fff; font-weight: 600; }
+
+  /* Issue section */
+  .issue { padding: 72px 0; border-top: 1px solid var(--line); }
+  .issue-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--accent); font-weight: 500;
+    margin-bottom: 12px; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  h2.issue-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(26px, 3.2vw, 38px);
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 24px;
+    max-width: 640px;
+  }
+  h2.issue-title em { font-style: italic; color: var(--accent); font-weight: 500; }
+
+  .issue-body p {
+    font-size: 17px; line-height: 1.72; color: var(--ink-2);
+    margin-bottom: 16px; max-width: 640px;
+  }
+  .issue-body p strong { color: var(--ink); font-weight: 600; }
+
+  /* Screenshot */
+  .screenshot {
+    margin: 32px 0;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .screenshot img { width: 100%; display: block; }
+  .screenshot figcaption {
+    padding: 10px 18px;
+    font-size: 12px; color: var(--muted);
+    border-top: 1px solid var(--line);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* Meta callout */
+  .meta-callout {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--ink-2);
+    padding: 14px 18px;
+    border-left: 3px solid var(--accent);
+    background: var(--accent-soft);
+    margin: 22px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .meta-callout b { color: var(--accent); font-weight: 600; }
+  .meta-callout.good { border-left-color: var(--green); background: var(--green-soft); }
+  .meta-callout.good b { color: var(--green); }
+  .meta-callout.gold { border-left-color: var(--gold); background: var(--gold-soft); }
+  .meta-callout.gold b { color: var(--gold); }
+
+  /* Two-column for screenshots side by side */
+  .screenshot-pair {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 32px 0;
+  }
+  .screenshot-pair .screenshot { margin: 0; }
+  @media (max-width: 680px) { .screenshot-pair { grid-template-columns: 1fr; } }
+
+  /* Fix list */
+  .fix-list { margin-top: 16px; padding-left: 0; list-style: none; }
+  .fix-list li {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 8px 0; border-top: 1px solid var(--line);
+    font-size: 15.5px; line-height: 1.6; color: var(--ink-2);
+  }
+  .fix-list li:last-child { border-bottom: 1px solid var(--line); }
+  .fix-list .fix-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+
+  /* Plan block */
+  .plan-block {
+    background: var(--ink); color: var(--bg);
+    padding: 80px 0;
+  }
+  .plan-block .eyebrow { color: #f5a880; }
+  .plan-block .eyebrow::after { background: rgba(255,255,255,0.15); }
+  .plan-block h2.chapter-title {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1.15; letter-spacing: -0.015em;
+    font-weight: 600; color: #f4ecd8; margin-bottom: 12px; max-width: 640px;
+  }
+  .plan-block h2.chapter-title em { font-style: italic; color: #f5a880; font-weight: 500; }
+  .plan-block .lede { color: #c8c0a8; font-size: 17px; margin-top: 12px; }
+
+  .plan-list { margin-top: 40px; }
+  .plan-step {
+    display: grid; grid-template-columns: 60px 1fr;
+    gap: 24px; padding: 28px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    align-items: start;
+  }
+  .plan-step:last-child { border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .plan-step .pn {
+    font-family: 'Fraunces', serif; font-style: italic; font-weight: 500;
+    font-size: 34px; color: #f5a880; line-height: 1;
+  }
+  .plan-step .pt h4 {
+    font-family: 'Fraunces', serif; font-weight: 600;
+    font-size: 20px; color: #fff; margin-bottom: 6px; line-height: 1.3;
+  }
+  .plan-step .pt p { color: #c8c0a8; font-size: 15px; line-height: 1.6; margin: 0; max-width: 580px; }
+  @media (max-width: 600px) { .plan-step { grid-template-columns: 40px 1fr; gap: 16px; } }
+
+  /* Footer */
+  .footer {
+    padding: 40px 0;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-size: 13px; color: var(--muted);
+  }
+  .footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+
+  /* Stat strip */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    margin: 36px 0 0;
+  }
+  .stat-strip > div { padding: 20px 18px; border-right: 1px solid var(--line); }
+  .stat-strip > div:last-child { border-right: none; }
+  .stat-strip .lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin-bottom: 6px; }
+  .stat-strip .val { font-family: 'Fraunces', serif; font-weight: 600; font-size: 28px; color: var(--ink); line-height: 1; }
+  .stat-strip .val.warn { color: var(--accent); }
+  .stat-strip .val.good { color: var(--green); }
+  .stat-strip .sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<!-- Topbar -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="topbar-inner">
+      <span><b>Google Ads Audit</b> — atomic-shop.ae</span>
+      <span class="pill"><span class="dot"></span>9 критических проблем</span>
+    </div>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Google Ads · Performance Max</div>
+    <h1 class="title">Реклама работает.<br><em>Деньги уходят не туда.</em></h1>
+    <p class="lede">
+      Аккаунт <strong>atomic-shop.ae</strong> — магазин автозапчастей и тюнинга, ОАЭ. Запущена одна Performance Max кампания с бюджетом 60 AED/день. На первый взгляд всё работает — клики есть, показы есть. Но внутри — девять настроечных ошибок, которые вместе дают самый неприятный результат: деньги тратятся, а покупок не считается.
+    </p>
+    <div class="hero-meta">
+      <div>Кампания<b>PM-Shoping-In-Stock</b></div>
+      <div>Бюджет<b>60 AED / день</b></div>
+      <div>Тип<b>Performance Max</b></div>
+      <div>Клики (7 дней)<b>148</b></div>
+      <div>Показы<b>18 578</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- Summary block -->
+<div class="summary-block">
+  <div class="wrap">
+    <div class="eyebrow">Главный вывод</div>
+    <p class="summary-text">
+      Кампания оптимизируется по <em>просмотрам страниц</em>, а не по покупкам. Google видит тысячи «конверсий» (просмотры), считает что всё отлично, и продолжает тратить бюджет — не отличая покупателя от случайного зеваки. Это <b>системная ошибка в фундаменте</b>, которую не исправить ни объявлениями, ни минус-словами.
+    </p>
+  </div>
+</div>
+
+<!-- Issue 1 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 01</div>
+    <h2 class="issue-title">Геотаргетинг и языки:<br><em>показываемся всему миру</em></h2>
+    <div class="issue-body">
+      <p>
+        Выбрана страна — ОАЭ. Казалось бы, нормально. Но дьявол в деталях: включён режим <strong>«Присутствие или интерес»</strong>. Это значит, что реклама показывается не только тем, кто физически находится в ОАЭ, но и тем, кто просто интересуется Эмиратами — сидя в Египте, России или Пакистане. Купить через atomic-shop.ae они вряд ли смогут.
+      </p>
+      <p>
+        Параллельно выбраны <strong>«Все языки»</strong>. Реклама крутится на пользователей с любым языком браузера — то есть и на арабоязычных, и на хинди, хотя сайт на английском.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image2.png" alt="Настройки местоположения и языка">
+      <figcaption>Настройки кампании → Местоположения: ОАЭ + Присутствие или интерес + Все языки</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Что исправить:</b> Режим → «Присутствие». Языки → English (+ Arabic если сайт поддерживает).
+    </div>
+  </div>
+</div>
+
+<!-- Issue 2 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 02</div>
+    <h2 class="issue-title">Объявление пустое.<br><em>Совсем.</em></h2>
+    <div class="issue-body">
+      <p>
+        В группе объектов — ни одного заголовка, ни одного описания. Ноль. Google сам написал «Добавьте: 3 заголовка и 2 описания — иначе этот формат недоступен». Качество объявления: <strong>«Плохое»</strong>. Формат поисковой рекламы заблокирован.
+      </p>
+      <p>
+        При этом включена «Оптимизация объектов» — Google генерирует тексты автоматически с сайта. Это не замена нормальным заголовкам: AI-генерация работает поверх, а не вместо. Без базовых объектов кампания не может нормально показываться в поиске.
+      </p>
+    </div>
+
+    <div class="screenshot-pair">
+      <figure class="screenshot">
+        <img src="screenshots/image5.png" alt="Качество объявления — Плохое">
+        <figcaption>Группа объектов: качество «Плохое», сигналов нет</figcaption>
+      </figure>
+      <figure class="screenshot">
+        <img src="screenshots/image6.png" alt="Пустые поля заголовков">
+        <figcaption>0/30 заголовков, формат поиска заблокирован</figcaption>
+      </figure>
+    </div>
+
+    <div class="meta-callout">
+      <b>Что исправить:</b> Добавить минимум 3–5 заголовков и 2–3 описания с ключевыми продуктами (тормоза Brembo, диски, шины для трека и т.д.).
+    </div>
+  </div>
+</div>
+
+<!-- Issue 3 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 03</div>
+    <h2 class="issue-title">Конверсии настроены<br><em>не на покупки</em></h2>
+    <div class="issue-body">
+      <p>
+        Это самая критичная ошибка. Основное целевое действие кампании — <strong>«Google Shopping App Page View»</strong>, то есть просмотр страницы. Не добавление в корзину. Не оформление заказа. Просто факт перехода на сайт.
+      </p>
+      <p>
+        Google видит эти просмотры как «конверсии» и думает, что кампания работает отлично. Он продолжает крутить рекламу на всех, кто кликает — не разбирая, купил человек или ушёл через 5 секунд. Фактические покупки в аккаунте зафиксированы как <strong>«Нет недавних конверсий»</strong>, а ценность транзакций вообще не передаётся.
+      </p>
+    </div>
+
+    <div class="screenshot-pair">
+      <figure class="screenshot">
+        <img src="screenshots/image7.png" alt="Основное целевое действие — просмотр страницы">
+        <figcaption>Основная цель: «Page View». Ценность = не использовать</figcaption>
+      </figure>
+      <figure class="screenshot">
+        <img src="screenshots/image8.png" alt="Список конверсий — покупки без данных">
+        <figcaption>Покупки: «Нет недавних конверсий». Ценность: 0,00</figcaption>
+      </figure>
+    </div>
+
+    <div class="meta-callout">
+      <b>Что исправить:</b> Сделать <b>«Purchase»</b> основным целевым действием. Настроить передачу ценности (суммы покупки). Перевести Page View / Add to Cart в «Дополнительные» цели.
+    </div>
+  </div>
+</div>
+
+<!-- Issue 4 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 04</div>
+    <h2 class="issue-title">Нет сигналов аудитории.<br><em>AI работает вслепую.</em></h2>
+    <div class="issue-body">
+      <p>
+        Performance Max использует машинное обучение Google. Но чтобы AI понял, <em>кому</em> показывать рекламу, нужны сигналы — подсказки о целевой аудитории. Сейчас их нет совсем: раздел «Сигналы» показывает пустую страницу.
+      </p>
+      <p>
+        Без сигналов алгоритм обучается с нуля на реальных данных — это нормально, но занимает время и стоит денег. С сигналами (аудитории покупателей, похожие аудитории, аудитории по интересам к автозапчастям) обучение проходит быстрее и точнее.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image5.png" alt="Нет сигналов аудитории">
+      <figcaption>Группа объектов: «Сигналов нет»</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Что добавить:</b> Аудитории покупателей из GA4, списки ремаркетинга, аудитории «Автозапчасти и тюнинг», аудитории конкурентов. Темы поиска по ключевым продуктам.
+    </div>
+  </div>
+</div>
+
+<!-- Issue 5 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 05</div>
+    <h2 class="issue-title">Оптимизация объектов:<br><em>текст включён, но заполнен не так</em></h2>
+    <div class="issue-body">
+      <p>
+        В настройках включена автогенерация текста — Google берёт контент с сайта и создаёт варианты объявлений самостоятельно. Формально статус «Оптимизированы». Изображения тоже подключены — здесь всё в порядке.
+      </p>
+      <p>
+        Проблема в том, что это <em>не отменяет</em> необходимость вручную добавить основные объекты. Автогенерация улучшает существующее — без базовых заголовков и описаний ей нечего улучшать, и формат поиска остаётся заблокированным (см. Проблему 02).
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image3.png" alt="Оптимизация объектов">
+      <figcaption>Оптимизация объектов: текст — статус ОК, изображение — ОК. Но объявление пустое.</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Вывод:</b> Включать автогенерацию текста — хорошо. Но сначала нужны ручные объекты. Одно не заменяет другое.
+    </div>
+  </div>
+</div>
+
+<!-- Issue 6 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 06</div>
+    <h2 class="issue-title">Возраст не исключён</h2>
+    <div class="issue-body">
+      <p>
+        В разделе «Демографические исключения» не проставлены галочки ни для возраста, ни для пола. Это значит, что кампания не применяет исключения, заданные на уровне групп объявлений — реклама может показываться любым возрастным группам.
+      </p>
+      <p>
+        Для магазина высокопроизводительных автозапчастей (<strong>тормоза Brembo, диски Vossen, шины Michelin Pilot Sport</strong>) аудитория достаточно специфична. Исключение нерелевантных возрастных категорий снижает расходы на нецелевые показы.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image4.png" alt="Демографические исключения не настроены">
+      <figcaption>Демографические исключения: галочки не проставлены</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Что сделать:</b> Включить «Использовать исключённые возрастные группы». Исключить 18–24 (если данные конверсий подтверждают низкую отдачу) и «Неизвестно» при желании.
+    </div>
+  </div>
+</div>
+
+<!-- Issue 7 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 07</div>
+    <h2 class="issue-title">Тип ресурса не выбран<br><em>на уровне аккаунта</em></h2>
+    <div class="issue-body">
+      <p>
+        В настройках соответствия контента требованиям — раздел «Тип ресурса» — не задан тип инвентаря. По умолчанию это означает <strong>«Расширенный инвентарь»</strong>: реклама может появляться рядом с контентом без фильтрации — нецензурной лексикой, провокационным контентом, агрессивными материалами.
+      </p>
+      <p>
+        Для бренда в сфере автозапчастей это репутационный риск: объявление с логотипом магазина рядом с нежелательным контентом не добавляет доверия.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image9.png" alt="Тип ресурса — выбор инвентаря">
+      <figcaption>Соответствие контента требованиям: тип ресурса не выбран на уровне аккаунта</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Что сделать:</b> Установить «Стандартный инвентарь» (рекомендуется Google). Для большего контроля — «Ограниченный».
+    </div>
+  </div>
+</div>
+
+<!-- Issue 8 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 08</div>
+    <h2 class="issue-title">Нет исключений<br><em>контента и площадок</em></h2>
+    <div class="issue-body">
+      <p>
+        Все расширенные настройки исключений пустые: нет исключений по чувствительному контенту, по темам, по ключевым словам в контенте, нет исключённых мест размещения. Реклама показывается на любых площадках в сети Google.
+      </p>
+      <p>
+        В контекстно-медийной сети это обычно ведёт к показам на партнёрских сайтах низкого качества и в приложениях, где целевая аудитория минимальна — при этом бюджет расходуется.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image10.png" alt="Расширенные настройки исключений пусты">
+      <figcaption>Исключённый деликатный контент: Нет. Темы: Нет. Места размещения: Ничего не выбрано</figcaption>
+    </figure>
+
+    <div class="meta-callout">
+      <b>Что сделать:</b> Добавить исключения: мобильные приложения (mobileapps.gdn), парковочные домены уже исключены — хорошо. Добавить исключение тем и чувствительного контента.
+    </div>
+  </div>
+</div>
+
+<!-- Issue 9 -->
+<div class="issue">
+  <div class="wrap">
+    <div class="issue-num">Проблема 09</div>
+    <h2 class="issue-title">Поисковые запросы:<br><em>много мусора рядом с нормальными</em></h2>
+    <div class="issue-body">
+      <p>
+        За 7 дней — 148 кликов, 18 578 показов, CTR 0.80%, средний CPC 0.88 AED. Есть хорошие запросы: <em>michelin pilot sport cup 2</em>, <em>girodisc porsche</em>, <em>hp2000 brembo</em>, <em>stilo helmets</em> — люди ищут конкретные бренды и модели, которые есть в магазине.
+      </p>
+      <p>
+        Но кампания также подтягивает <strong>слишком широкие запросы</strong>: <em>tyres</em>, <em>cheap track tires</em>, <em>wool insulation</em>. Первые два — информационные, без намерения купить именно в Дубае. Третий («шерстяная изоляция») — вообще случайное совпадение. Без минус-слов алгоритм продолжит их подбирать.
+      </p>
+    </div>
+
+    <figure class="screenshot">
+      <img src="screenshots/image11.png" alt="Поисковые запросы">
+      <figcaption>Поисковые запросы: PM-Shoping-In-Stock, 14–20 мая 2026</figcaption>
+    </figure>
+
+    <div class="stat-strip">
+      <div><div class="lbl">Клики (7 дн.)</div><div class="val">148</div></div>
+      <div><div class="lbl">Показы</div><div class="val">18 578</div></div>
+      <div><div class="lbl">CTR</div><div class="val good">0.80%</div></div>
+      <div><div class="lbl">Ср. CPC</div><div class="val good">0.88 AED</div></div>
+      <div><div class="lbl">Расходы</div><div class="val">130.61 AED</div></div>
+    </div>
+
+    <div class="meta-callout" style="margin-top: 28px;">
+      <b>Что сделать:</b> Добавить минус-слова: tyres (как общий запрос), wool, insulation, free, cheap, DIY, how to. Оставить бренды запчастей — они целевые.
+    </div>
+  </div>
+</div>
+
+<!-- Plan -->
+<div class="plan-block">
+  <div class="wrap">
+    <div class="eyebrow">Что делать</div>
+    <h2 class="chapter-title">План исправлений по <em>приоритету</em></h2>
+    <p class="lede">Некоторые правки занимают 10 минут и дают эффект сразу. Другие требуют недели для обучения алгоритма. Порядок важен.</p>
+
+    <div class="plan-list">
+      <div class="plan-step">
+        <div class="pn">1</div>
+        <div class="pt">
+          <h4>Исправить конверсии</h4>
+          <p>Сделать Purchase основной целью. Настроить передачу ценности заказа. Перевести Page View в дополнительные. Без этого все остальные правки — косметика.</p>
+        </div>
+      </div>
+      <div class="plan-step">
+        <div class="pn">2</div>
+        <div class="pt">
+          <h4>Добавить объекты объявления</h4>
+          <p>Написать 5–10 заголовков с конкретикой (Brembo, Vossen, Michelin, бесплатная доставка по ОАЭ, официальный магазин). 3–4 описания. Загрузить 3–5 изображений. Разблокировать поисковый формат.</p>
+        </div>
+      </div>
+      <div class="plan-step">
+        <div class="pn">3</div>
+        <div class="pt">
+          <h4>Исправить геотаргетинг и языки</h4>
+          <p>Режим «Присутствие» вместо «Присутствие или интерес». Языки: English + Arabic. Остановить показы за пределами реальной аудитории покупателей.</p>
+        </div>
+      </div>
+      <div class="plan-step">
+        <div class="pn">4</div>
+        <div class="pt">
+          <h4>Добавить сигналы аудитории</h4>
+          <p>Аудитории из GA4, ремаркетинг, аудитории по интересам к автомобилям и тюнингу. Темы поиска по ключевым категориям товаров.</p>
+        </div>
+      </div>
+      <div class="plan-step">
+        <div class="pn">5</div>
+        <div class="pt">
+          <h4>Очистить поисковые запросы и добавить минус-слова</h4>
+          <p>Проработать список запросов, добавить минус-слова для нерелевантных. Повторять раз в 2 недели пока кампания обучается.</p>
+        </div>
+      </div>
+      <div class="plan-step">
+        <div class="pn">6</div>
+        <div class="pt">
+          <h4>Настройки безопасности контента</h4>
+          <p>Тип ресурса → Стандартный инвентарь. Исключить мобильные приложения, деликатный контент. Демографические исключения по возрасту если данные подтверждают.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="wrap">
+    <p>Аудит подготовлен для <a href="https://atomic-shop.ae" target="_blank">atomic-shop.ae</a> · Google Ads · Performance Max</p>
+  </div>
+</div>
+
+</body>
+</html>
